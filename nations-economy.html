@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nations and Their Economies</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #f39c12;
+        }
+        .country {
+            margin: 20px;
+            padding: 20px;
+            border-radius: 5px;
+            background-color: #34495e;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+        .country:hover {
+            transform: scale(1.05);
+        }
+        .card {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #1abc9c;
+            border-radius: 5px;
+        }
+        button {
+            cursor: pointer;
+            background-color: #f39c12;
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+    </style>
+</head>
+<body>
+    <h1>Nations and Their Economies</h1>
+    <div>
+        <div class="country">
+            <button onclick="document.getElementById('usa').style.display='block';">🇺🇸 USA</button>
+            <div id="usa" class="card">
+                <p><strong>GDP:</strong> $21 trillion</p>
+                <p><strong>Population:</strong> 331 million</p>
+                <p><strong>Main Industries:</strong> Technology, Finance, Healthcare</p>
+                <p><strong>Biggest Export:</strong> Machinery</p>
+                <p><strong>Interesting Fact:</strong> Home to the world's largest economy.</p>
+            </div>
+        </div>
+        <div class="country">
+            <button onclick="document.getElementById('china').style.display='block';">🇨🇳 China</button>
+            <div id="china" class="card">
+                <p><strong>GDP:</strong> $14 trillion</p>
+                <p><strong>Population:</strong> 1.4 billion</p>
+                <p><strong>Main Industries:</strong> Manufacturing, Technology, Agriculture</p>
+                <p><strong>Biggest Export:</strong> Electronics</p>
+                <p><strong>Interesting Fact:</strong> Known as the "Factory of the World".</p>
+            </div>
+        </div>
+        <div class="country">
+            <button onclick="document.getElementById('nigeria').style.display='block';">🇳🇬 Nigeria</button>
+            <div id="nigeria" class="card">
+                <p><strong>GDP:</strong> $450 billion</p>
+                <p><strong>Population:</strong> 206 million</p>
+                <p><strong>Main Industries:</strong> Oil, Agriculture, Telecommunications</p>
+                <p><strong>Biggest Export:</strong> Oil</p>
+                <p><strong>Interesting Fact:</strong> Africa's largest economy.</p>
+            </div>
+        </div>
+        <div class="country">
+            <button onclick="document.getElementById('germany').style.display='block';">🇩🇪 Germany</button>
+            <div id="germany" class="card">
+                <p><strong>GDP:</strong> $4 trillion</p>
+                <p><strong>Population:</strong> 83 million</p>
+                <p><strong>Main Industries:</strong> Automotive, Engineering, Electronics</p>
+                <p><strong>Biggest Export:</strong> Cars</p>
+                <p><strong>Interesting Fact:</strong> Europe's largest economy.</p>
+            </div>
+        </div>
+        <div class="country">
+            <button onclick="document.getElementById('brazil').style.display='block';">🇧🇷 Brazil</button>
+            <div id="brazil" class="card">
+                <p><strong>GDP:</strong> $2 trillion</p>
+                <p><strong>Population:</strong> 213 million</p>
+                <p><strong>Main Industries:</strong> Agriculture, Mining, Energy</p>
+                <p><strong>Biggest Export:</strong> Soybeans</p>
+                <p><strong>Interesting Fact:</strong> Largest coffee producer in the world.</p>
+            </div>
+        </div>
+        <div class="country">
+            <button onclick="document.getElementById('india').style.display='block';">🇮🇳 India</button>
+            <div id="india" class="card">
+                <p><strong>GDP:</strong> $2.9 trillion</p>
+                <p><strong>Population:</strong> 1.366 billion</p>
+                <p><strong>Main Industries:</strong> IT, Textiles, Agriculture</p>
+                <p><strong>Biggest Export:</strong> Diamonds</p>
+                <p><strong>Interesting Fact:</strong> Fastest growing economy among major nations.</p>
+            </div>
+        </div>
+        <div class="country">
+            <button onclick="document.getElementById('saudi').style.display='block';">🇸🇦 Saudi Arabia</button>
+            <div id="saudi" class="card">
+                <p><strong>GDP:</strong> $800 billion</p>
+                <p><strong>Population:</strong> 34 million</p>
+                <p><strong>Main Industries:</strong> Oil, Mining, Industrial</p>
+                <p><strong>Biggest Export:</strong> Oil</p>
+                <p><strong>Interesting Fact:</strong> Holds the world's second-largest proven oil reserves.</p>
+            </div>
+        </div>
+        <div class="country">
+            <button onclick="document.getElementById('southafrica').style.display='block';">🇿🇦 South Africa</button>
+            <div id="southafrica" class="card">
+                <p><strong>GDP:</strong> $350 billion</p>
+                <p><strong>Population:</strong> 58 million</p>
+                <p><strong>Main Industries:</strong> Mining, Manufacturing, Agriculture</p>
+                <p><strong>Biggest Export:</strong> Gold</p>
+                <p><strong>Interesting Fact:</strong> Known for its rich mineral resources.</p>
+            </div>
+        </div>
+        <div class="country">
+            <button onclick="document.getElementById('japan').style.display='block';">🇯🇵 Japan</button>
+            <div id="japan" class="card">
+                <p><strong>GDP:</strong> $5 trillion</p>
+                <p><strong>Population:</strong> 126 million</p>
+                <p><strong>Main Industries:</strong> Automotive, Electronics, Robotics</p>
+                <p><strong>Biggest Export:</strong> Cars</p>
+                <p><strong>Interesting Fact:</strong> Third-largest economy in the world.</p>
+            </div>
+        </div>
+        <div class="country">
+            <button onclick="document.getElementById('uk').style.display='block';">🇬🇧 United Kingdom</button>
+            <div id="uk" class="card">
+                <p><strong>GDP:</strong> $3 trillion</p>
+                <p><strong>Population:</strong> 67 million</p>
+                <p><strong>Main Industries:</strong> Finance, Manufacturing, Tourism</p>
+                <p><strong>Biggest Export:</strong> Machinery</p>
+                <p><strong>Interesting Fact:</strong> Home to the London Stock Exchange.</p>
+            </div>
+        </div>
+    </div>
+    <script>
+        // JavaScript to show and hide cards 
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            button.onclick = function() {
+                const card = this.nextElementSibling;
+                card.style.display = card.style.display === 'block' ? 'none' : 'block';
+            };
+        });
+    </script>
+</body>
+</html>
