@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World Capitals Challenge</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 15px;
+            padding: 40px;
+            max-width: 700px;
+            width: 100%;
+            box-shadow: 0 8px 32px rgba(0, 255, 255, 0.2);
+            border: 2px solid #00ffff;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: #00ffff;
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px #00ffff;
+        }
+        
+        .score-board {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(0, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        
+        .score-item {
+            text-align: center;
+        }
+        
+        .score-label {
+            color: #ffff00;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        
+        .score-value {
+            color: #00ff00;
+            font-size: 1.8em;
+            font-weight: bold;
+        }
+        
+        .question-container {
+            display: none;
+        }
+        
+        .question-container.active {
+            display: block;
+        }
+        
+        .progress {
+            text-align: center;
+            color: #00ffff;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+        }
+        
+        .country-name {
+            background: linear-gradient(135deg, #ff00ff, #00ffff);
+            color: #000;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 30px;
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+        }
+        
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .option-btn {
+            padding: 15px;
+            font-size: 1em;
+            font-weight: bold;
+            border: 2px solid #00ffff;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #fff;
+            background: linear-gradient(135deg, #ff6600, #ff00ff);
+            text-transform: uppercase;
+        }
+        
+        .option-btn:hover:not(:disabled) {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(255, 102, 0, 0.7);
+        }
+        
+        .option-btn:disabled {
+            cursor: not-allowed;
+        }
+        
+        .option-btn.correct {
+            background: linear-gradient(135deg, #00ff00, #00cc00);
+            border-color: #00ff00;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.8);
+        }
+        
+        .option-btn.incorrect {
+            background: linear-gradient(135deg, #ff0000, #cc0000);
+            border-color: #ff0000;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
+        }
+        
+        .feedback {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 1.2em;
+            font-weight: bold;
+            min-height: 30px;
+        }
+        
+        .correct-message {
+            color: #00ff00;
+            text-shadow: 0 0 10px #00ff00;
+        }
+        
+        .incorrect-message {
+            color: #ff0000;
+            text-shadow: 0 0 10px #ff0000;
+        }
+        
+        .correct-answer {
+            color: #00ff00;
+            text-shadow: 0 0 10px #00ff00;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .next-btn, .play-again-btn {
+            padding: 12px 30px;
+            font-size: 1em;
+            font-weight: bold;
+            border: 2px solid #00ffff;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #000;
+            background: linear-gradient(135deg, #00ffff, #00ff88);
+            text-transform: uppercase;
+        }
+        
+        .next-btn:hover, .play-again-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+        }
+        
+        .next-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .completion-screen {
+            display: none;
+            text-align: center;
+        }
+        
+        .completion-screen.active {
+            display: block;
+        }
+        
+        .celebration {
+            font-size: 3em;
+            margin: 20px 0;
+            animation: bounce 0.6s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .final-score {
+            color: #00ffff;
+            font-size: 1.5em;
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(0, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        
+        .final-score-value {
+            color: #ffff00;
+            font-size: 2em;
+            font-weight: bold;
+        }
+        
+        .completion-message {
+            color: #00ff00;
+            font-size: 1.8em;
+            font-weight: bold;
+            margin: 20px 0;
+            text-shadow: 0 0 10px #00ff00;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌍 World Capitals Challenge 🌍</h1>
+            <div class="score-board">
+                <div class="score-item">
+                    <div class="score-label">Correct</div>
+                    <div class="score-value" id="correct-score">0</div>
+                </div>
+                <div class="score-item">
+                    <div class="score-label">Wrong</div>
+                    <div class="score-value" id="wrong-score">0</div>
+                </div>
+                <div class="score-item">
+                    <div class="score-label">Progress</div>
+                    <div class="score-value" id="progress">0/50</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="question-container active">
+            <div class="progress">Question <span id="current-question">1</span> of 50</div>
+            <div class="country-name" id="country-name">Loading...</div>
+            <div class="options" id="options-container"></div>
+            <div class="feedback" id="feedback"></div>
+            <div class="button-group">
+                <button class="next-btn" id="next-btn" disabled>Next Question</button>
+            </div>
+        </div>
+        
+        <div class="completion-screen">
+            <div class="celebration">🎉✨🎊</div>
+            <div class="completion-message">Quiz Complete!</div>
+            <div class="final-score">
+                You got <span class="final-score-value" id="final-correct">0</span> out of 50 correct!
+            </div>
+            <div class="final-score" id="accuracy"></div>
+            <button class="play-again-btn" id="play-again-btn">Play Again</button>
+        </div>
+    </div>
+    
+    <script>
+        const quizData = [
+            // Africa
+            { country: 'Egypt', capital: 'Cairo', options: ['Cairo', 'Alexandria', 'Giza', 'Aswan'] },
+            { country: 'Nigeria', capital: 'Abuja', options: ['Lagos', 'Abuja', 'Kano', 'Ibadan'] },
+            { country: 'Kenya', capital: 'Nairobi', options: ['Nairobi', 'Mombasa', 'Kisumu', 'Nakuru'] },
+            { country: 'South Africa', capital: 'Pretoria', options: ['Johannesburg', 'Cape Town', 'Pretoria', 'Durban'] },
+            { country: 'Morocco', capital: 'Rabat', options: ['Marrakech', 'Fez', 'Rabat', 'Casablanca'] },
+            { country: 'Tanzania', capital: 'Dar es Salaam', options: ['Dodoma', 'Dar es Salaam', 'Arusha', 'Mbeya'] },
+            { country: 'Ethiopia', capital: 'Addis Ababa', options: ['Addis Ababa', 'Dire Dawa', 'Adama', 'Mekelle'] },
+            { country: 'Ghana', capital: 'Accra', options: ['Accra', 'Kumasi', 'Sekondi', 'Tema'] },
+            
+            // Europe
+            { country: 'France', capital: 'Paris', options: ['Paris', 'Lyon', 'Marseille', 'Nice'] },
+            { country: 'Germany', capital: 'Berlin', options: ['Berlin', 'Munich', 'Hamburg', 'Frankfurt'] },
+            { country: 'Italy', capital: 'Rome', options: ['Rome', 'Milan', 'Venice', 'Florence'] },
+            { country: 'Spain', capital: 'Madrid', options: ['Madrid', 'Barcelona', 'Valencia', 'Seville'] },
+            { country: 'United Kingdom', capital: 'London', options: ['London', 'Manchester', 'Liverpool', 'Edinburgh'] },
+            { country: 'Poland', capital: 'Warsaw', options: ['Warsaw', 'Krakow', 'Gdansk', 'Wroclaw'] },
+            { country: 'Greece', capital: 'Athens', options: ['Athens', 'Thessaloniki', 'Patras', 'Heraklion'] },
+            { country: 'Portugal', capital: 'Lisbon', options: ['Lisbon', 'Porto', 'Covilha', 'Faro'] },
+            { country: 'Sweden', capital: 'Stockholm', options: ['Stockholm', 'Gothenburg', 'Malmo', 'Uppsala'] },
+            { country: 'Netherlands', capital: 'Amsterdam', options: ['Amsterdam', 'Rotterdam', 'The Hague', 'Utrecht'] },
+            
+            // Asia
+            { country: 'China', capital: 'Beijing', options: ['Beijing', 'Shanghai', 'Chongqing', 'Shenzhen'] },
+            { country: 'India', capital: 'New Delhi', options: ['New Delhi', 'Mumbai', 'Bangalore', 'Kolkata'] },
+            { country: 'Japan', capital: 'Tokyo', options: ['Tokyo', 'Osaka', 'Kyoto', 'Yokohama'] },
+            { country: 'Thailand', capital: 'Bangkok', options: ['Bangkok', 'Chiang Mai', 'Pattaya', 'Phuket'] },
+            { country: 'South Korea', capital: 'Seoul', options: ['Seoul', 'Busan', 'Incheon', 'Daegu'] },
+            { country: 'Vietnam', capital: 'Hanoi', options: ['Hanoi', 'Ho Chi Minh City', 'Da Nang', 'Hai Phong'] },
+            { country: 'Indonesia', capital: 'Jakarta', options: ['Jakarta', 'Surabaya', 'Bandung', 'Medan'] },
+            { country: 'Philippines', capital: 'Manila', options: ['Manila', 'Cebu', 'Davao', 'Quezon City'] },
+            { country: 'Malaysia', capital: 'Kuala Lumpur', options: ['Kuala Lumpur', 'George Town', 'Johor Bahru', 'Petaling Jaya'] },
+            { country: 'Singapore', capital: 'Singapore', options: ['Singapore', 'Jurong', 'Clementi', 'Marina'] },
+            
+            // North America
+            { country: 'United States', capital: 'Washington, D.C.', options: ['Washington, D.C.', 'New York', 'Los Angeles', 'Chicago'] },
+            { country: 'Canada', capital: 'Ottawa', options: ['Ottawa', 'Toronto', 'Vancouver', 'Montreal'] },
+            { country: 'Mexico', capital: 'Mexico City', options: ['Mexico City', 'Guadalajara', 'Cancun', 'Monterrey'] },
+            
+            // South America
+            { country: 'Brazil', capital: 'Brasília', options: ['Brasília', 'São Paulo', 'Rio de Janeiro', 'Salvador'] },
+            { country: 'Argentina', capital: 'Buenos Aires', options: ['Buenos Aires', 'Cordoba', 'Rosario', 'Mendoza'] },
+            { country: 'Peru', capital: 'Lima', options: ['Lima', 'Arequipa', 'Cusco', 'Trujillo'] },
+            { country: 'Colombia', capital: 'Bogotá', options: ['Bogotá', 'Medellin', 'Cali', 'Barranquilla'] },
+            { country: 'Chile', capital: 'Santiago', options: ['Santiago', 'Valparaiso', 'Concepcion', 'Valdivia'] },
+            { country: 'Venezuela', capital: 'Caracas', options: ['Caracas', 'Maracaibo', 'Valencia', 'Barquisimeto'] },
+            
+            // Middle East
+            { country: 'Saudi Arabia', capital: 'Riyadh', options: ['Riyadh', 'Jeddah', 'Mecca', 'Medina'] },
+            { country: 'United Arab Emirates', capital: 'Abu Dhabi', options: ['Abu Dhabi', 'Dubai', 'Sharjah', 'Ajman'] },
+            { country: 'Israel', capital: 'Jerusalem', options: ['Jerusalem', 'Tel Aviv', 'Haifa', 'Be\'er Sheva'] },
+            { country: 'Turkey', capital: 'Ankara', options: ['Ankara', 'Istanbul', 'Izmir', 'Bursa'] },
+            { country: 'Iran', capital: 'Tehran', options: ['Tehran', 'Mashhad', 'Isfahan', 'Tabriz'] },
+            { country: 'Iraq', capital: 'Baghdad', options: ['Baghdad', 'Basra', 'Mosul', 'Kirkuk'] },
+            { country: 'Lebanon', capital: 'Beirut', options: ['Beirut', 'Tripoli', 'Sidon', 'Tyre'] },
+            { country: 'Jordan', capital: 'Amman', options: ['Amman', 'Zarqa', 'Irbid', 'Salt'] },
+            { country: 'Qatar', capital: 'Doha', options: ['Doha', 'Al Rayyan', 'Al Wakrah', 'Umm Salal'] },
+            { country: 'Oman', capital: 'Muscat', options: ['Muscat', 'Salalah', 'Nizwa', 'Sohar'] },
+            
+            // Oceania
+            { country: 'Australia', capital: 'Canberra', options: ['Canberra', 'Sydney', 'Melbourne', 'Brisbane'] },
+            { country: 'New Zealand', capital: 'Wellington', options: ['Wellington', 'Auckland', 'Christchurch', 'Dunedin'] },
+            { country: 'Fiji', capital: 'Suva', options: ['Suva', 'Nadi', 'Lautoka', 'Ba'] },
+            { country: 'Papua New Guinea', capital: 'Port Moresby', options: ['Port Moresby', 'Lae', 'Madang', 'Goroka'] },
+            { country: 'Samoa', capital: 'Apia', options: ['Apia', 'Fagali\'i', 'Salailau', 'Tafuna'] },
+        ];
+        
+        let currentQuestionIndex = 0;
+        let correctScore = 0;
+        let wrongScore = 0;
+        let shuffledQuestions = [];
+        let answered = false;
+        
+        function shuffle(array) {
+            let arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+        
+        function shuffleOptions(options) {
+            return shuffle(options);
+        }
+        
+        function initializeQuiz() {
+            shuffledQuestions = shuffle(quizData);
+            currentQuestionIndex = 0;
+            correctScore = 0;
+            wrongScore = 0;
+            answered = false;
+            displayQuestion();
+            updateScore();
+            document.querySelector('.question-container').classList.add('active');
+            document.querySelector('.completion-screen').classList.remove('active');
+        }
+        
+        function displayQuestion() {
+            if (currentQuestionIndex >= shuffledQuestions.length) {
+                showCompletionScreen();
+                return;
+            }
+            
+            const question = shuffledQuestions[currentQuestionIndex];
+            const shuffledOptions = shuffleOptions(question.options);
+            
+            document.getElementById('country-name').textContent = question.country;
+            document.getElementById('current-question').textContent = currentQuestionIndex + 1;
+            document.getElementById('progress').textContent = (currentQuestionIndex + 1) + '/' + shuffledQuestions.length;
+            
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+            
+            shuffledOptions.forEach(option => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.textContent = option;
+                btn.onclick = () => checkAnswer(option, question.capital, btn);
+                optionsContainer.appendChild(btn);
+            });
+            
+            document.getElementById('feedback').textContent = '';
+            document.getElementById('next-btn').disabled = true;
+            answered = false;
+        }
+        
+        function checkAnswer(selected, correct, button) {
+            if (answered) return;
+            answered = true;
+            
+            const allButtons = document.querySelectorAll('.option-btn');
+            allButtons.forEach(btn => btn.disabled = true);
+            
+            const feedback = document.getElementById('feedback');
+            
+            if (selected === correct) {
+                correctScore++;
+                button.classList.add('correct');
+                feedback.innerHTML = '<span class="correct-message">✓ Correct!</span>';
+            } else {
+                wrongScore++;
+                button.classList.add('incorrect');
+                const correctButton = Array.from(allButtons).find(btn => btn.textContent === correct);
+                if (correctButton) {
+                    correctButton.classList.add('correct');
+                }
+                feedback.innerHTML = `<span class="incorrect-message">✗ Wrong!</span><br><span class="correct-answer">Correct answer: ${correct}</span>`;
+            }
+            
+            document.getElementById('next-btn').disabled = false;
+            updateScore();
+        }
+        
+        function updateScore() {
+            document.getElementById('correct-score').textContent = correctScore;
+            document.getElementById('wrong-score').textContent = wrongScore;
+            document.getElementById('progress').textContent = currentQuestionIndex + '/' + shuffledQuestions.length;
+        }
+        
+        function nextQuestion() {
+            currentQuestionIndex++;
+            displayQuestion();
+        }
+        
+        function showCompletionScreen() {
+            document.querySelector('.question-container').classList.remove('active');
+            document.querySelector('.completion-screen').classList.add('active');
+            
+            const percentage = Math.round((correctScore / shuffledQuestions.length) * 100);
+            document.getElementById('final-correct').textContent = correctScore;
+            document.getElementById('accuracy').innerHTML = `<strong>Accuracy: ${percentage}%</strong>`;
+        }
+        
+        function playAgain() {
+            initializeQuiz();
+        }
+        
+        document.getElementById('next-btn').addEventListener('click', nextQuestion);
+        document.getElementById('play-again-btn').addEventListener('click', playAgain);
+        
+        // Initialize the quiz on page load
+        initializeQuiz();
+    </script>
+</body>
+</html>
