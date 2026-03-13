@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World Biggest Cities Challenge</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            font-family: 'Arial', sans-serif;
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(30, 30, 50, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            border: 3px solid #00d4ff;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            background: linear-gradient(45deg, #00d4ff, #ff006e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+        }
+        
+        .intro-text {
+            font-size: 0.95em;
+            line-height: 1.6;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(0, 212, 255, 0.1);
+            border-left: 4px solid #00d4ff;
+            border-radius: 5px;
+            color: #e0e0ff;
+        }
+        
+        .score-board {
+            display: flex;
+            justify-content: space-around;
+            margin: 25px 0;
+            padding: 20px;
+            background: rgba(0, 212, 255, 0.08);
+            border-radius: 10px;
+            border: 2px solid #00d4ff;
+        }
+        
+        .score-item {
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        
+        .score-item .label {
+            font-size: 0.9em;
+            color: #00d4ff;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .score-item .value {
+            font-size: 2em;
+            color: #00ff00;
+        }
+        
+        .score-item.wrong .value {
+            color: #ff0055;
+        }
+        
+        .score-item.progress {
+            flex-grow: 1;
+            margin: 0 20px;
+        }
+        
+        .progress-bar {
+            background: rgba(255, 255, 255, 0.1);
+            height: 30px;
+            border-radius: 15px;
+            overflow: hidden;
+            border: 2px solid #00d4ff;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00d4ff, #ff006e);
+            width: 0%;
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+        
+        .mode-tabs {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            border-bottom: 2px solid #00d4ff;
+        }
+        
+        .mode-tab {
+            flex: 1;
+            padding: 15px;
+            background: rgba(0, 212, 255, 0.1);
+            border: 2px solid #00d4ff;
+            color: #00d4ff;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 10px 10px 0 0;
+            transition: all 0.3s ease;
+            font-size: 0.95em;
+            text-align: center;
+        }
+        
+        .mode-tab:hover {
+            background: rgba(0, 212, 255, 0.2);
+        }
+        
+        .mode-tab.active {
+            background: linear-gradient(135deg, #00d4ff, #00a0ff);
+            color: #1a1a2e;
+            font-size: 1.05em;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+        }
+        
+        .question-section {
+            margin: 30px 0;
+        }
+        
+        .question-text {
+            font-size: 1.8em;
+            font-weight: bold;
+            text-align: center;
+            margin: 30px 0;
+            color: #00ff88;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        }
+        
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 30px 0;
+        }
+        
+        .option-btn {
+            padding: 20px;
+            font-size: 1.1em;
+            font-weight: bold;
+            border: 3px solid #00d4ff;
+            background: rgba(0, 212, 255, 0.1);
+            color: #00d4ff;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .option-btn:hover:not(:disabled) {
+            background: rgba(0, 212, 255, 0.3);
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.6);
+            transform: translateY(-3px);
+        }
+        
+        .option-btn:disabled {
+            cursor: not-allowed;
+        }
+        
+        .option-btn.correct {
+            background: linear-gradient(135deg, #00ff00, #00cc00);
+            color: #000;
+            border-color: #00ff00;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.8);
+            transform: scale(1.05);
+        }
+        
+        .option-btn.wrong {
+            background: linear-gradient(135deg, #ff0055, #cc0044);
+            color: #fff;
+            border-color: #ff0055;
+            box-shadow: 0 0 20px rgba(255, 0, 85, 0.8);
+            transform: scale(0.95);
+        }
+        
+        .feedback {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 1.3em;
+            font-weight: bold;
+            min-height: 40px;
+        }
+        
+        .feedback.correct-msg {
+            color: #00ff00;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.6);
+        }
+        
+        .feedback.wrong-msg {
+            color: #ff0055;
+            text-shadow: 0 0 10px rgba(255, 0, 85, 0.6);
+        }
+        
+        .fun-fact {
+            margin: 15px 0;
+            padding: 15px;
+            background: rgba(255, 165, 0, 0.1);
+            border-left: 4px solid #ffa500;
+            border-radius: 5px;
+            font-size: 0.95em;
+            color: #ffd700;
+            font-style: italic;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin: 30px 0;
+            justify-content: center;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            font-size: 1.1em;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #00d4ff, #00a0ff);
+            color: #1a1a2e;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
+        }
+        
+        .btn-primary:hover:not(:disabled) {
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.8);
+            transform: translateY(-3px);
+        }
+        
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #00ff88, #00cc66);
+            color: #1a1a2e;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+        }
+        
+        .btn-success:hover:not(:disabled) {
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.8);
+            transform: translateY(-3px);
+        }
+        
+        .congratulations {
+            display: none;
+            text-align: center;
+            animation: slideIn 0.6s ease;
+        }
+        
+        .congratulations.show {
+            display: block;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .congratulations h2 {
+            font-size: 3em;
+            margin: 20px 0;
+            background: linear-gradient(45deg, #00ff88, #00d4ff, #ff006e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+        }
+        
+        .final-score {
+            font-size: 2em;
+            margin: 30px 0;
+            color: #ffd700;
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+        }
+        
+        .percentage {
+            font-size: 1.5em;
+            color: #00ff88;
+            margin: 15px 0;
+        }
+        
+        .celebration {
+            font-size: 3em;
+            margin: 20px 0;
+            animation: bounce 1s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌍 World Biggest Cities Challenge 🏙️</h1>
+            <div class="intro-text">
+                <strong>Welcome to the World Biggest Cities Challenge!</strong> This quiz tests your knowledge in TWO exciting modes:<br>
+                <strong>🗺️ Largest by Land Mass:</strong> Cities ranked by total area (e.g., sprawling metropolitan regions)<br>
+                <strong>👥 Most Populated:</strong> Cities ranked by population (density of inhabitants)<br>
+                A city can rank high in one category but low in another! For example, Tokyo has a massive population but smaller land area compared to some sprawling cities. Let's test your geography skills!
+            </div>
+        </div>
+        
+        <div class="score-board">
+            <div class="score-item">
+                <span class="label">CORRECT</span>
+                <span class="value" id="correctScore">0</span>
+            </div>
+            <div class="score-item progress">
+                <span class="label">PROGRESS</span>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressBar">0%</div>
+                </div>
+            </div>
+            <div class="score-item wrong">
+                <span class="label">WRONG</span>
+                <span class="value" id="wrongScore">0</span>
+            </div>
+        </div>
+        
+        <div class="mode-tabs">
+            <button class="mode-tab active" data-mode="landmass">🗺️ Largest by Land Mass</button>
+            <button class="mode-tab" data-mode="population">👥 Most Populated</button>
+        </div>
+        
+        <div class="question-section" id="questionSection">
+            <div class="question-text" id="questionText"></div>
+            <div class="options" id="optionsContainer"></div>
+            <div class="feedback" id="feedback"></div>
+            <div class="fun-fact" id="funFact"></div>
+            <div class="controls">
+                <button class="btn btn-primary" id="nextBtn" disabled>Next Question</button>
+            </div>
+        </div>
+        
+        <div class="congratulations" id="congratulations">
+            <div class="celebration">🎉🎊🏆</div>
+            <h2>CONGRATULATIONS!</h2>
+            <p style="font-size: 1.2em; color: #00d4ff; margin: 20px 0;">You've completed the challenge!</p>
+            <div class="final-score">
+                Final Score: <span id="finalCorrect">0</span> / <span id="finalTotal">0</span>
+            </div>
+            <div class="percentage" id="percentageText"></div>
+            <div class="controls">
+                <button class="btn btn-success" id="playAgainBtn">🔄 Play Again</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Quiz Data
+        const quizData = {
+            landmass: [
+                { country: 'China', correct: 'Shanghai', options: ['Shanghai', 'Beijing', 'Chongqing', 'Guangzhou'], fact: 'Shanghai spans over 6,300 km² and is one of the largest metropolitan areas by land mass in Asia!' },
+                { country: 'Russia', correct: 'Moscow', options: ['Moscow', 'St. Petersburg', 'Novosibirsk', 'Yekaterinburg'], fact: 'Moscow covers approximately 2,511 km² and is Europes largest city by land area!' },
+                { country: 'India', correct: 'Delhi', options: ['Delhi', 'Mumbai', 'Bangalore', 'Kolkata'], fact: 'Delhi spans over 1,484 km² and is one of the largest urban agglomerations in the world!' },
+                { country: 'USA', correct: 'Houston', options: ['New York', 'Los Angeles', 'Houston', 'Chicago'], fact: 'Houston covers approximately 1,625 km² making it one of the largest US cities by area!' },
+                { country: 'Brazil', correct: 'São Paulo', options: ['Rio de Janeiro', 'São Paulo', 'Brasília', 'Salvador'], fact: 'São Paulo is the largest metropolitan area in South America with an area of about 2,227 km²!' },
+                { country: 'Egypt', correct: 'Cairo', options: ['Cairo', 'Giza', 'Alexandria', 'Aswan'], fact: 'Cairo sprawls across over 3,085 km² and is the largest city on the African continent!' },
+                { country: 'Nigeria', correct: 'Lagos', options: ['Lagos', 'Abuja', 'Kano', 'Ibadan'], fact: 'Lagos is one of the most sprawling cities in Africa with a massive metropolitan area!' },
+                { country: 'Australia', correct: 'Sydney', options: ['Sydney', 'Melbourne', 'Brisbane', 'Perth'], fact: 'Sydney covers about 12,367 km² as a metropolitan area, one of the largest in Oceania!' },
+                { country: 'Japan', correct: 'Tokyo', options: ['Tokyo', 'Osaka', 'Kyoto', 'Yokohama'], fact: 'Tokyo metropolitan area spans thousands of square kilometers making it a massive urban region!' },
+                { country: 'South Africa', correct: 'Johannesburg', options: ['Johannesburg', 'Cape Town', 'Durban', 'Pretoria'], fact: 'Johannesburg is South Africas largest city by area, covering over 1,600 km²!' },
+                { country: 'Canada', correct: 'Toronto', options: ['Toronto', 'Vancouver', 'Montreal', 'Calgary'], fact: 'Toronto spans about 630 km² in the metropolitan area and is Canadas largest city!' },
+                { country: 'Mexico', correct: 'Mexico City', options: ['Mexico City', 'Guadalajara', 'Monterrey', 'Cancun'], fact: 'Mexico City covers about 2,121 km² and is the largest city in North America!' },
+                { country: 'Saudi Arabia', correct: 'Riyadh', options: ['Riyadh', 'Jeddah', 'Dammam', 'Medina'], fact: 'Riyadh is rapidly expanding and is the largest city in the Arabian Peninsula!' },
+                { country: 'UAE', correct: 'Dubai', options: ['Dubai', 'Abu Dhabi', 'Sharjah', 'Ajman'], fact: 'Dubai has grown into one of the most sprawling modern cities in the Middle East!' },
+                { country: 'Pakistan', correct: 'Karachi', options: ['Karachi', 'Lahore', 'Islamabad', 'Multan'], fact: 'Karachi is the largest city in Pakistan and covers a massive metropolitan area!' },
+                { country: 'Indonesia', correct: 'Jakarta', options: ['Jakarta', 'Surabaya', 'Bandung', 'Medan'], fact: 'Jakarta is one of the largest metropolitan areas in Southeast Asia by total area!' },
+                { country: 'Germany', correct: 'Berlin', options: ['Berlin', 'Munich', 'Hamburg', 'Frankfurt'], fact: 'Berlin is one of the largest cities in Europe by land area, covering about 891 km²!' },
+                { country: 'Turkey', correct: 'Istanbul', options: ['Istanbul', 'Ankara', 'Izmir', 'Bursa'], fact: 'Istanbul spans both Europe and Asia, making it a uniquely expansive transcontinental city!' },
+                { country: 'Argentina', correct: 'Buenos Aires', options: ['Buenos Aires', 'Córdoba', 'Rosario', 'Mendoza'], fact: 'Buenos Aires has a vast metropolitan area and is the largest city in South America!' },
+                { country: 'Kenya', correct: 'Nairobi', options: ['Nairobi', 'Mombasa', 'Kisumu', 'Nakuru'], fact: 'Nairobi is East Africas largest city and continues to expand rapidly!' }
+            ],
+            population: [
+                { country: 'China', correct: 'Shanghai', options: ['Shanghai', 'Beijing', 'Chongqing', 'Guangzhou'], fact: 'Shanghai has a population of over 27 million people, making it one of the most densely populated cities!' },
+                { country: 'India', correct: 'Mumbai', options: ['Delhi', 'Mumbai', 'Bangalore', 'Kolkata'], fact: 'Mumbai has over 20 million residents and is one of the most crowded cities in the world!' },
+                { country: 'Russia', correct: 'Moscow', options: ['Moscow', 'St. Petersburg', 'Novosibirsk', 'Yekaterinburg'], fact: 'Moscow has a population of over 12 million people, making it Europes most populous city!' },
+                { country: 'USA', correct: 'New York', options: ['New York', 'Los Angeles', 'Houston', 'Chicago'], fact: 'New York City has over 8 million residents and is the USA s most populous city!' },
+                { country: 'Brazil', correct: 'São Paulo', options: ['Rio de Janeiro', 'São Paulo', 'Brasília', 'Salvador'], fact: 'São Paulo has over 12 million residents and is South Americas most populous city!' },
+                { country: 'Egypt', correct: 'Cairo', options: ['Cairo', 'Giza', 'Alexandria', 'Aswan'], fact: 'Cairo has over 20 million residents and is the most populous city in Africa!' },
+                { country: 'Nigeria', correct: 'Lagos', options: ['Lagos', 'Abuja', 'Kano', 'Ibadan'], fact: 'Lagos has over 14 million people and is Africas most populous city!' },
+                { country: 'Japan', correct: 'Tokyo', options: ['Tokyo', 'Osaka', 'Kyoto', 'Yokohama'], fact: 'Tokyo has over 37 million residents in its metropolitan area, making it the worlds most populous city!' },
+                { country: 'Mexico', correct: 'Mexico City', options: ['Mexico City', 'Guadalajara', 'Monterrey', 'Cancun'], fact: 'Mexico City has over 21 million residents and is the Americas most populous metropolitan area!' },
+                { country: 'South Korea', correct: 'Seoul', options: ['Seoul', 'Busan', 'Daegu', 'Incheon'], fact: 'Seoul has over 10 million residents and is one of the most densely populated capitals!' },
+                { country: 'Philippines', correct: 'Manila', options: ['Manila', 'Cebu', 'Davao', 'Cagayan de Oro'], fact: 'Manila has over 14 million residents and is one of the most densely populated cities globally!' },
+                { country: 'Thailand', correct: 'Bangkok', options: ['Bangkok', 'Chiang Mai', 'Phuket', 'Pattaya'], fact: 'Bangkok has over 10 million residents and is the cultural and economic heart of Southeast Asia!' },
+                { country: 'Indonesia', correct: 'Jakarta', options: ['Jakarta', 'Surabaya', 'Bandung', 'Medan'], fact: 'Jakarta has over 10 million residents and is one of Southeast Asias largest cities!' },
+                { country: 'Pakistan', correct: 'Karachi', options: ['Karachi', 'Lahore', 'Islamabad', 'Multan'], fact: 'Karachi has over 16 million residents and is Pakistans largest and most populous city!' },
+                { country: 'Bangladesh', correct: 'Dhaka', options: ['Dhaka', 'Chittagong', 'Khulna', 'Rajshahi'], fact: 'Dhaka has over 19 million residents and is one of the most densely populated cities on Earth!' },
+                { country: 'Turkey', correct: 'Istanbul', options: ['Istanbul', 'Ankara', 'Izmir', 'Bursa'], fact: 'Istanbul has over 15 million residents and is the largest city in Turkey!' },
+                { country: 'Germany', correct: 'Berlin', options: ['Berlin', 'Munich', 'Hamburg', 'Frankfurt'], fact: 'Berlin has about 3.6 million residents and is Germanys most populous city!' },
+                { country: 'France', correct: 'Paris', options: ['Paris', 'Lyon', 'Marseille', 'Toulouse'], fact: 'Paris has over 2 million residents and nearly 12 million in the metropolitan area!' },
+                { country: 'Argentina', correct: 'Buenos Aires', options: ['Buenos Aires', 'Córdoba', 'Rosario', 'Mendoza'], fact: 'Buenos Aires has over 3 million residents and over 13 million in the metropolitan area!' },
+                { country: 'Saudi Arabia', correct: 'Riyadh', options: ['Riyadh', 'Jeddah', 'Dammam', 'Medina'], fact: 'Riyadh has over 7 million residents and is the most populous city in the Middle East!' }
+            ]
+        };
+        
+        // State Management
+        let currentMode = 'landmass';
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let correctAnswers = 0;
+        let wrongAnswers = 0;
+        let answered = false;
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeGame();
+            setupEventListeners();
+        });
+        
+        function initializeGame() {
+            currentQuestions = shuffleArray([...quizData[currentMode]]);
+            currentQuestionIndex = 0;
+            correctAnswers = 0;
+            wrongAnswers = 0;
+            answered = false;
+            displayQuestion();
+            updateUI();
+            document.getElementById('congratulations').classList.remove('show');
+            document.getElementById('questionSection').style.display = 'block';
+        }
+        
+        function setupEventListeners() {
+            document.querySelectorAll('.mode-tab').forEach(tab => {
+                tab.addEventListener('click', (e) => {
+                    switchMode(e.target.dataset.mode);
+                });
+            });
+            
+            document.getElementById('nextBtn').addEventListener('click', nextQuestion);
+            document.getElementById('playAgainBtn').addEventListener('click', () => {
+                initializeGame();
+            });
+        }
+        
+        function switchMode(mode) {
+            currentMode = mode;
+            document.querySelectorAll('.mode-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            initializeGame();
+        }
+        
+        function displayQuestion() {
+            if (currentQuestionIndex >= currentQuestions.length) {
+                endGame();
+                return;
+            }
+            
+            answered = false;
+            const question = currentQuestions[currentQuestionIndex];
+            document.getElementById('questionText').textContent = `Which city is the ${currentMode === 'landmass' ? 'LARGEST by Land Mass' : 'MOST POPULATED'} in ${question.country}?`;
+            
+            const shuffledOptions = shuffleArray([...question.options]);
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+            
+            shuffledOptions.forEach(option => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.textContent = option;
+                btn.addEventListener('click', () => selectAnswer(btn, option, question));
+                optionsContainer.appendChild(btn);
+            });
+            
+            document.getElementById('feedback').textContent = '';
+            document.getElementById('funFact').textContent = '';
+            document.getElementById('nextBtn').disabled = true;
+        }
+        
+        function selectAnswer(btn, selected, question) {
+            if (answered) return;
+            answered = true;
+            
+            const isCorrect = selected === question.correct;
+            
+            document.querySelectorAll('.option-btn').forEach(button => {
+                button.disabled = true;
+            });
+            
+            if (isCorrect) {
+                btn.classList.add('correct');
+                document.getElementById('feedback').textContent = '✓ CORRECT!';
+                document.getElementById('feedback').className = 'feedback correct-msg';
+                correctAnswers++;
+            } else {
+                btn.classList.add('wrong');
+                document.getElementById('feedback').textContent = '✗ WRONG!';
+                document.getElementById('feedback').className = 'feedback wrong-msg';
+                wrongAnswers++;
+                
+                document.querySelectorAll('.option-btn').forEach(button => {
+                    if (button.textContent === question.correct) {
+                        button.classList.add('correct');
+                    }
+                });
+            }
+            
+            document.getElementById('funFact').textContent = '💡 ' + question.fact;
+            document.getElementById('nextBtn').disabled = false;
+            updateUI();
+        }
+        
+        function nextQuestion() {
+            currentQuestionIndex++;
+            displayQuestion();
+        }
+        
+        function endGame() {
+            document.getElementById('questionSection').style.display = 'none';
+            const total = currentQuestions.length;
+            const percentage = Math.round((correctAnswers / total) * 100);
+            
+            document.getElementById('finalCorrect').textContent = correctAnswers;
+            document.getElementById('finalTotal').textContent = total;
+            document.getElementById('percentageText').textContent = `${percentage}% Correct!`;
+            
+            document.getElementById('congratulations').classList.add('show');
+        }
+        
+        function updateUI() {
+            document.getElementById('correctScore').textContent = correctAnswers;
+            document.getElementById('wrongScore').textContent = wrongAnswers;
+            const total = currentQuestions.length;
+            const completed = currentQuestionIndex;
+            const percentage = (completed / total) * 100;
+            document.getElementById('progressBar').style.width = percentage + '%';
+            document.getElementById('progressBar').textContent = Math.round(percentage) + '%';
+        }
+        
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+    </script>
+</body>
+</html>
